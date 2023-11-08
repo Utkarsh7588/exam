@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract StudentContract {
+    // Define a student structure
+    struct Student {
+        uint id;
+        string name;
+        string email;
+        uint class;
+    }
+
+    // Array to store students
+    Student[] private students;
+
+    // Mapping to store student's index in the array above by their ID
+    mapping(uint => uint) private studentIndex;
+
+    // Function to add a student
+    function addStudent(uint _id, string memory _name, string memory _email, uint _class) public {
+        // Check that the student does not already exist using the ID
+        require(studentIndex[_id] == 0, "Student already exists.");
+
+        // Add student to the array and to the index mapping
+        students.push(Student(_id, _name, _email, _class));
+        studentIndex[_id] = students.length; // The index is the position in the array + 1
+    }
+
+    // Function to get student data by ID
+    function getStudent(uint _id) public view returns (Student memory) {
+        uint index = studentIndex[_id];
+        require(index > 0, "Student does not exist.");
+        return students[index - 1]; // Array is zero-indexed
+    }
+
+    // Fallback function to handle any ether sent to the contract mistakenly
+    fallback() external payable {
+        revert("Contract does not accept ether");
+    }
+
+    // Retrieve the balance of the contract (should always be 0 due to the fallback)
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
+    }
+}

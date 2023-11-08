@@ -1,0 +1,100 @@
+import java.util.Scanner;
+public class NQueen{
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the size of the board: ");
+        int n = scanner.nextInt();
+
+        boolean[][] board = new boolean[n][n];
+
+
+
+
+            System.out.println("Enter the row and column positions of queen ");
+            int row = scanner.nextInt();
+            int col = scanner.nextInt();
+            board[row-1][col-1] = true;
+// to show solution can input 3,4
+
+        solve(board);
+
+        scanner.close();
+    }
+    public static void solve(boolean [] [] nq){
+        if(!place(nq,0)){
+            System.out.println("no solution");
+        }
+
+    }
+    public static boolean place(boolean [] []nq, int col){
+        if(col==nq.length-1){
+           showBoard(nq);
+           System.out.println("Solution found if another solution exists is below");
+           return true;
+        }
+        for(int row=0;row<nq[0].length;row++){
+        if(isSafe(nq,row,col)){
+            nq[row][col]=true;
+            place(nq,col+1);
+            nq[row][col]=false;
+
+
+        }
+        }
+
+
+        return false;
+    }
+
+    private static void showBoard(boolean[][] nq) {
+        for(boolean[] row : nq) {
+            for(boolean element : row) {
+                if (element) {
+                    System.out.print("Q ");
+                } else {
+                    System.out.print("X ");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    private static boolean isSafe(boolean [][] nq,int row,int col) {
+        for(int r=0;r<nq.length;r++){
+            if(nq[r][col]==true){
+                return false;
+            }
+        }
+        for(int c=0;c<nq.length;c++){
+            if(nq[row][c]==true){
+                return false;
+            }
+        }
+        int maxrightup=Math.min(row, nq.length-col-1);
+        for(int i=0;i<=maxrightup;i++){
+            if(nq[row-i][col+i]){
+                return false;
+            }
+        }
+        int maxrightdown=Math.min(nq.length-row-1, nq.length-col-1);
+        for(int i=0;i<=maxrightdown;i++){
+            if(nq[row+i][col+i]){
+                return false;
+            }
+        }
+        int maxleftup=Math.min(row, col);
+        for(int i=0;i<=maxleftup;i++){
+            if(nq[row-i][col-i]){
+                return false;
+            }
+        }
+        int maxleftdown=Math.min(nq.length-row-1, col);
+        for(int i=0;i<=maxleftdown;i++){
+            if(nq[row+i][col-i]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+}

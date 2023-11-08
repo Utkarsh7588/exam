@@ -1,0 +1,67 @@
+import java.util.Scanner;
+
+public class Fibonacci {
+
+    // Non-recursive method for Fibonacci numbers
+    public static long fibonacciNonRecursive(int n) {
+        if (n <= 1) {
+            return n;
+        }
+        long fib = 1;
+        long prevFib = 1;
+
+        for (int i = 2; i < n; i++) {
+            long temp = fib;
+            fib += prevFib;
+            prevFib = temp;
+        }
+        return fib;
+    }
+
+    // Recursive method for Fibonacci numbers
+    public static long fibonacciRecursive(int n) {
+        if (n <= 1) {
+            return n;
+        } else {
+            return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
+        }
+    }
+
+    // Main method
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int choice, number;
+        long result;
+
+        do {
+            System.out.println("\nFibonacci Calculator");
+            System.out.println("1. Non-Recursive Fibonacci");
+            System.out.println("2. Recursive Fibonacci");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter the term number: ");
+                    number = scanner.nextInt();
+                    result = fibonacciNonRecursive(number);
+                    System.out.println("Non-Recursive Fibonacci result: " + result);
+                    break;
+                case 2:
+                    System.out.print("Enter the term number: ");
+                    number = scanner.nextInt();
+                    result = fibonacciRecursive(number);
+                    System.out.println("Recursive Fibonacci result: " + result);
+                    break;
+                case 3:
+                    System.out.println("Exiting program.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter 1, 2, or 3.");
+            }
+        } while (choice != 3);
+
+        scanner.close();
+    }
+}

@@ -1,0 +1,85 @@
+import java.util.Scanner;
+
+
+
+public class FracKnapsack {
+
+    private static void sortItemsByRatio(Item[] items) {
+        for (int i = 0; i < items.length - 1; i++) {
+            for (int j = 0; j < items.length - i - 1; j++) {
+                if (items[j].ratio < items[j + 1].ratio) {
+                    Item temp = items[j];
+                    items[j] = items[j + 1];
+                    items[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    private static double getMaxValue(int capacity, Item[] items) {
+        sortItemsByRatio(items);
+
+        double totalValue = 0;
+        System.out.println("Items in the knapsack:");
+
+        for (Item item : items) {
+            if (capacity > 0) {
+                int curWt = item.weight;
+                int curVal = item.value;
+
+                if (capacity - curWt >= 0) {
+                    // this weight can be picked fully
+                    capacity -= curWt;
+                    totalValue += curVal;
+                    System.out.println("Taken: " + curWt + " units of weight, " + curVal + " units of value, 100% of the item.");
+                } else {
+                    // item can't be picked whole
+                    double fraction = ((double) capacity / curWt);
+                    totalValue += (curVal * fraction);
+                    System.out.println("Taken: " + capacity + " units of weight, " + (curVal * fraction) + " units of value, " + (fraction * 100) + "% of the item.");
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+
+        return totalValue;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter the number of items: ");
+        int n = scanner.nextInt();
+        Item[] items = new Item[n];
+
+        for (int i = 0; i < n; i++) {
+            System.out.println("Item " + (i + 1) + " - Enter weight: ");
+            int weight = scanner.nextInt();
+            System.out.println("Item " + (i + 1) + " - Enter value: ");
+            int value = scanner.nextInt();
+            items[i] = new Item(weight, value);
+        }
+
+        System.out.println("Enter the capacity of the knapsack: ");
+        int capacity = scanner.nextInt();
+
+        double maxValue = getMaxValue(capacity, items);
+
+        System.out.println("Maximum value we can obtain = " + maxValue);
+
+        scanner.close();
+    }
+    public static class Item {
+        int weight;
+        int value;
+        double ratio;
+
+        public Item(int weight, int value) {
+            this.weight = weight;
+            this.value = value;
+            this.ratio = (double) value / weight;
+        }
+    }
+}

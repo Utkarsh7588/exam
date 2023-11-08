@@ -1,0 +1,37 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract SimpleBank {
+    // The keyword "public" makes variables
+    // accessible from other contracts
+    mapping (address => uint) public balances;
+
+    // Events - publicize actions to external listeners
+    event DepositMade(address indexed accountAddress, uint amount);
+    event WithdrawalMade(address indexed accountAddress, uint amount, uint newBalance);
+
+    // Deposit money into the bank
+    function deposit() public payable {
+        require(msg.value > 0, "Deposit amount must be greater than zero.");
+        balances[msg.sender] += msg.value;
+
+        // Broadcast deposit event
+        emit DepositMade(msg.sender, msg.value);
+    }
+
+    // Withdraw money from the bank
+    function withdraw(uint withdrawAmount) public {
+        require(balances[msg.sender] >= withdrawAmount, "Insufficient balance.");
+        balances[msg.sender] -= withdrawAmount;
+        payable(msg.sender).transfer(withdrawAmount);
+
+        // Broadcast withdrawal event
+        emit WithdrawalMade(msg.sender, withdrawAmount, balances[msg.sender]);
+    }
+
+    // Retrieve the balance of the account
+    function balance() view public returns (uint) {
+        return balances[msg.sender];
+    }
+}
+

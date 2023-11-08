@@ -1,0 +1,66 @@
+import java.util.*;
+public class Huffman {
+    static Node root;
+    public static void main(String[] args) {
+
+        ArrayList<Node> pq=new ArrayList<Node>();
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        char[] charArray = new char[n];
+        int[] charfreq = new int[n];
+        for(int i =0;i<n;i++){
+            System.out.println("Enter character " + (i + 1) + ": ");
+            charArray[i] = scanner.next().charAt(0);
+            System.out.println("Enter frequency of " + charArray[i] + ": ");
+            charfreq[i] = scanner.nextInt();
+            Node node=new Node(charfreq[i],charArray[i]);
+            pq.add(node);
+        }
+        while(!pq.isEmpty()) {
+            Node n1 = pq.remove(0);
+            Node n2 = pq.remove(0);
+            Node node = new Node(n1,n2);
+            for (int i=0;i< pq.size();i++){
+                if (node.frequency<pq.get(i).frequency){
+                    pq.add(i,node);
+                    break;
+                }
+                if(i==(pq.size()-1)&&node.frequency>pq.get(i).frequency){
+                    pq.add(node);
+                    break;
+                }
+            }
+            if(pq.isEmpty()){
+                root=node;
+            }
+        }
+        traverse(root,"");
+    }
+    public static void traverse(Node node, String code){
+        if(node.left==null&&node.left==null){
+            System.out.println(node.ch+":"+code);
+            return;
+        }
+        traverse(node.left,code+"0");
+        traverse(node.right,code+"1");
+    }
+    public static  class Node {
+        Node left;
+        Node right;
+        int frequency;
+        char ch;
+        public Node(int frequency,char ch){
+            this.frequency=frequency;
+            this.ch=ch;
+        }
+        public Node(int frequency){
+            this.frequency=frequency;
+        }
+        public Node(Node left,Node right)
+        {
+            this.left=left;
+            this.right=right;
+            this.frequency=left.frequency+ right.frequency;
+        }
+    }
+}
