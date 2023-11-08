@@ -83,3 +83,6 @@ public class FracKnapsack {
         }
     }
 }
+
+O(N * logN)
+O(n)
